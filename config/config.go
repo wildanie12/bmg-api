@@ -17,6 +17,7 @@ type AppConfig struct {
 		Name string
 		Username string
 		Password string
+		Host string
 	}
 }
 
@@ -40,12 +41,14 @@ func initConfig() *AppConfig {
 		config.DB.Name = "BMG_DB"
 		config.DB.Username = "root"
 		config.DB.Password = ""
-	} else {
-		config.App.BaseURL = os.Getenv("APP_BASE_URL")
-		config.App.Port = os.Getenv("APP_PORT")
-		config.DB.Name = os.Getenv("DB_NAME")
-		config.DB.Username = os.Getenv("DB_USER")
-		config.DB.Password = os.Getenv("DB_PASS")
+		config.DB.Host = "localhost"
+		} else {
+			config.App.BaseURL = os.Getenv("APP_BASE_URL")
+			config.App.Port = os.Getenv("APP_PORT")
+			config.DB.Name = os.Getenv("DB_NAME")
+			config.DB.Username = os.Getenv("DB_USER")
+			config.DB.Password = os.Getenv("DB_PASS")
+			config.DB.Host = os.Getenv("DB_HOST")
 	}
 	config.App.URL = strings.TrimRight(config.App.BaseURL, "/") + map[bool]string{ true: "", false: config.App.Port }[config.App.Port == "80"]
 
