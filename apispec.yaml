@@ -1,0 +1,601 @@
+openapi: '3.0.3'
+
+info:
+    title: Gin BMG Registration API
+    version: v1.0
+    contact:
+        email: badar.wildanie@gmail.com
+        name: Badar Wildani
+        url: https://github.com/wildanie12
+    description: Simple API for user registration based on BMG api description
+components:
+    securitySchemes:
+        JWTUser:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+            description: 'Use user token for authorization'
+    schemas:
+        auth_request:
+            type: object
+            required:
+                - 'username'
+                - 'password'
+            properties:
+                username:
+                    type: string
+                    example: 'andi'
+                password:
+                    type: string
+                    example: 'andi123'
+        user_request:
+            type: object
+            required:
+                - 'username'
+                - 'password'
+                - 'name'
+                - 'email'
+                - 'referral_code'
+            properties:
+                username:
+                    type: string
+                    example: 'andi'
+                password:
+                    type: string
+                    example: 'andi123'
+                name:
+                    type: string
+                    example: 'Andi Firmansyah'
+                email:
+                    type: string
+                    example: 'andi@mail.com'
+                referral_code:
+                    type: string
+                    example: 'ref-3310'
+        user_response:
+            type: object
+            properties:
+                username:
+                    type: string
+                    example: 'andi'
+                name:
+                    type: string
+                    example: 'Andi Firmansyah'
+                email:
+                    type: string
+                    example: 'andi@mail.com'
+                referral_code:
+                    type: string
+                    example: 'ref-3310'
+        web_server_error:
+            type: object
+            properties:
+                status:
+                    type: string
+                    example: 'ERROR'
+                code:
+                    type: number
+                    example: 500
+                error:
+                    type: string
+                    example: 'server error'
+        web_unauthorized:
+            type: object
+            properties:
+                status:
+                    type: string
+                    example: 'ERROR'
+                code:
+                    type: number
+                    example: 401
+                error:
+                    type: string
+                    example: 'Unauthorized user access'
+        hero_response:
+            type: object
+            properties:
+                version:
+                    type: string
+                    example: '6.24.1'
+                id:
+                    type: string
+                    example: 'Amumu'
+                key:
+                    type: string
+                    example: '32'
+                name:
+                    type: string
+                    example: 'Amumu'
+                title:
+                    type: string
+                    example: 'The Sad mummy'
+                blurb:
+                    type: string
+                    example: "olitude can be lonelier than death.''<br><br>A lonely and melancholy soul from ancient Shurima"
+                info:
+                    type: object
+                    properties:
+                        attack:
+                            type: number
+                            example: 2
+                        defense:
+                            type: number
+                            example: 6
+                        magic:
+                            type: number
+                            example: 8
+                        difficulty:
+                            type: number
+                            example: 3
+                image:
+                    type: object
+                    properties:
+                        full:
+                            type: string
+                            example: 'Amumu.jpg'
+                        sprite:
+                            type: string
+                            example: 'Champion0.jpg'
+                        group:
+                            type: string
+                            example: 'champion'
+                        x:
+                            type: number
+                            example: 192
+                        y:
+                            type: number
+                            example: 192
+                        w:
+                            type: number
+                            example: 192
+                        h:
+                            type: number
+                            example: 192
+                tags:
+                    type: array
+                    items:
+                        type: string
+                        example: 'Tank'
+                partype:
+                    type: string
+                    example: 'MP'
+                stats:
+                    type: object
+                    properties:
+                        hp:
+                            type: number
+                            example: 613.12
+                        hpperlevel:
+                            type: number
+                            example: 84.0
+                        mp:
+                            type: number
+                            example: 287.2
+                        mpperlevel:
+                            type: number
+                            example: 40.0
+                        movespeed:
+                            type: number
+                            example: 335.-
+                        armor:
+                            type: number
+                            example: 23.554
+                        armorperlevel:
+                            type: number
+                            example: 3.8
+                        spellblock:
+                            type: number
+                            example: 32.1
+                        spellblockperlevel:
+                            type: number
+                            example: 1.25
+                        attackrange:
+                            type: number
+                            example: 125.0
+                        hpregen:
+                            type: number
+                            example: 8.875
+                        hpregenperlevel:
+                            type: number
+                            example: 0.85
+                        mpregen:
+                            type: number
+                            example: 7.38
+                        mpregenperlevel:
+                            type: number
+                            example: 0.525
+                        crit:
+                            type: number
+                            example: 0.0
+                        critperlevel:
+                            type: number
+                            example: 0.0
+                        attackdamage:
+                            type: number
+                            example: 53.384
+                        attackdamageperlevel:
+                            type: number
+                            example: 3.8
+                        attackspeedoffset:
+                            type: number
+                            example: -0.02
+                        attackspeedperlevel:
+                            type: number
+                            example: 2.18
+
+paths:
+    /auth:
+        post:
+            tags:
+                - 'User & Authentication'
+            summary: Authenticate user
+            description: Authenticate a registered user
+            requestBody:
+                description: Credentials used for authentication
+                required: true
+                content:
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/auth_request'
+            responses:
+                '200':
+                    description: 'Success authenticating a user'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: 'OK'
+                                    code:
+                                        type: number
+                                        example: 200
+                                    data:
+                                        type: object
+                                        properties:
+                                            token:
+                                                type: string
+                                                example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+                                            user:
+                                                $ref: '#/components/schemas/user_response'
+                '422':
+                    description: 'Unprocessable Entities (Validation failed)'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: 'ERROR'
+                                    code:
+                                        type: number
+                                        example: 422
+                                    error:
+                                        type: string
+                                        example: 'form validation error'
+                                    errors:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                error:
+                                                    type: string
+                                                    example: 'username is required'
+                                                field:
+                                                    type: string
+                                                    example: 'username'
+                '500':
+                    description: 'server error'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/web_server_error'
+    /auth/me:
+        get:
+            description: Get currently authenticated user
+            summary: Get currently authenticated user
+            tags:
+                - 'User & Authentication'
+            security:
+                - JWTUser: []
+            responses:
+                '200':
+                    description: success getting authenticated user
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: 'OK'
+                                    code:
+                                        type: number
+                                        example: 200
+                                    data:
+                                        type: object
+                                        properties:
+                                            token:
+                                                type: string
+                                                example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+                                            user:
+                                                $ref: '#/components/schemas/user_response'
+                '401':
+                    description: 'Unauthorized token'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/web_unauthorized'
+                '500':
+                    description: 'server error'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/web_server_error'
+
+    /users:
+        get:
+            tags:
+                - 'User & Authentication'
+            description: 'get list of users based on provided data filter'
+            summary: 'get list of users'
+            parameters:
+                - name: 'name'
+                  in: query
+                  description: 'filter data parameter'
+                  schema:
+                      type: string
+                      example: 'john'
+            responses:
+                '200':
+                    description: success getting authenticated user
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: 'OK'
+                                    code:
+                                        type: number
+                                        example: 200
+                                    data:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/user_response'
+                '500':
+                    description: 'server error'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/web_server_error'
+
+        post:
+            tags:
+                - 'User & Authentication'
+            description: 'Register a user'
+            summary: 'Register a user'
+            requestBody:
+                required: true
+                description: User credentials that need to be provided
+                content:
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/user_request'
+            responses:
+                '201':
+                    description: 'success registering a user'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: 'OK'
+                                    code:
+                                        type: number
+                                        example: 201
+                                    data:
+                                        type: object
+                                        properties:
+                                            id:
+                                                type: number
+                                                example: 1
+                '422':
+                    description: 'Unprocessable Entities (Validation failed)'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: 'ERROR'
+                                    code:
+                                        type: number
+                                        example: 422
+                                    error:
+                                        type: string
+                                        example: 'form validation error'
+                                    errors:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                error:
+                                                    type: string
+                                                    example: 'username is required'
+                                                field:
+                                                    type: string
+                                                    example: 'username'
+                '500':
+                    description: 'server error'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/web_server_error'
+        put:
+            security:
+                - JWTUser: []
+            tags:
+                - 'User & Authentication'
+            description: 'Edit currently authenticated user'
+            summary: 'Edit profile'
+            requestBody:
+                required: true
+                description: User credentials that need to be provided
+                content:
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/user_request'
+            responses:
+                '200':
+                    description: 'success updating a user'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: 'OK'
+                                    code:
+                                        type: number
+                                        example: 200
+                                    data:
+                                        type: object
+                                        properties:
+                                            id:
+                                                type: number
+                                                example: 1
+                '401':
+                    description: 'Unauthorized token'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/web_unauthorized'
+                '422':
+                    description: 'Unprocessable Entities (Validation failed)'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: 'ERROR'
+                                    code:
+                                        type: number
+                                        example: 422
+                                    error:
+                                        type: string
+                                        example: 'form validation error'
+                                    errors:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                error:
+                                                    type: string
+                                                    example: 'username is required'
+                                                field:
+                                                    type: string
+                                                    example: 'username'
+                '500':
+                    description: 'server error'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/web_server_error'
+    /users/referral:
+        post:
+            description: Check referral code
+            summary: Check referral code
+            security:
+                - JWTUser: []
+            tags:
+                - 'User & Authentication'
+            requestBody:
+                description: referral code data
+                required: true
+                content:
+                    application/x-www-form-urlencoded:
+                        schema:
+                            type: object
+                            properties:
+                                referral:
+                                    type: string
+                                    example: 'ref-3310'
+            responses:
+                '200':
+                    description: Referral is valid
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: 'OK'
+                                    code:
+                                        type: number
+                                        example: 200
+                                    data:
+                                        type: object
+                                        properties:
+                                            user:
+                                                type: string
+                                                example: 'john'
+                '400':
+                    description: Referral is invalid
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: 'OK'
+                                    code:
+                                        type: number
+                                        example: 400
+                                    error:
+                                        type: string
+                                        example: 'Referral code is invalid'
+                '500':
+                    description: 'server error'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/web_server_error'
+
+    /hero:
+        get:
+            tags:
+                - 'Easter egg'
+            description: Get random hero based on name filter
+            summary: Get random hero based on name filter
+            parameters:
+                - name: name
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      example: Tee
+            responses:
+                '200':
+                    description: "success getting a hero's data"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/hero_response'
+                '500':
+                    description: 'server error'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/web_server_error'
