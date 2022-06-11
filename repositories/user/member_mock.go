@@ -54,7 +54,7 @@ func (repo RepositoryMock) FindAll(filters []map[string]string) ([]_domain.User,
 
 // Find method can get the single user resource
 // based on provided id parameter
-func (repo RepositoryMock) Find(id int) (_domain.User, error) {
+func (repo RepositoryMock) Find(username string) (_domain.User, error) {
 	args := repo.Mock.Called()
 	return args.Get(0).(domain.User), args.Error(1)
 }
@@ -81,7 +81,7 @@ func (repo RepositoryMock) Update(user _domain.User) (_domain.User, error) {
 }
 
 // Delete user by id provided in parameter
-func (repo RepositoryMock) Delete(id int) error {
+func (repo RepositoryMock) Delete(username string) error {
 	args := repo.Mock.Called()
 	return args.Error(0)
 }
