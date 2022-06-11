@@ -14,9 +14,19 @@ func (err Error) Error() string {
 
 
 
+// ValidationErrorItem contains every validation error happen
+// which is part of ValidationError
+type ValidationErrorItem struct {
+	Field string `json:"field"`
+	Error string `json:"error"`
+}
 // ValidationError represent single item of each va
 // validation that fails on every form submit endpoint hit
 type ValidationError struct {
-	Field string `json:"field"`
-	Error string `json:"error"`
+	Message string
+	Code int
+	Errors []ValidationErrorItem
+}
+func (err ValidationError) Error() string {
+	return err.Message
 }
