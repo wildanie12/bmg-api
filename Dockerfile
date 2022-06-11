@@ -1,5 +1,7 @@
 FROM golang:1.17-alpine
 
+RUN apk update; apk add gcc musl-dev gcompat
+
 WORKDIR /app
 
 COPY go.mod .
