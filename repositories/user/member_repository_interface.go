@@ -15,7 +15,7 @@ type RepositoryInterface interface {
 	
 	// Find method can get the single user resource
 	// based on provided id parameter
-	Find(id int) (domain.User, error)
+	Find(username string) (domain.User, error)
 
 	// FindBy method finds single user using specified custom
 	// field and value provided in parameter
@@ -27,7 +27,7 @@ type RepositoryInterface interface {
 
 	// Update user with newly provided user
 	// entity domain and persistence it to data source
-	Update(user domain.User) (domain.User, error)
+	Update(user domain.User, username string) (domain.User, error)
 
 	// Delete user by id provided in parameter
 	Delete(id int) error
