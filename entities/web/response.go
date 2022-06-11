@@ -5,7 +5,7 @@ package web
 type SuccessResponse struct {
 	Status string `json:"status"`
 	Code int	`json:"code"`
-	Data string `json:"data"`
+	Data interface{} `json:"data"`
 }
 
 // ValidationErrorResponse represent validation error
