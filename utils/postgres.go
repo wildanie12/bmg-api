@@ -8,7 +8,8 @@ import (
 	"gorm.io/gorm"
 )
 
-
+// NewPostgresConnection creates database connection
+// to defined postgres instance inside configuration
 func NewPostgresConnection(config *_config.AppConfig) *gorm.DB {
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=5432 sslmode=disable TimeZone=Asia/Jakarta", 
