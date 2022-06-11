@@ -26,13 +26,14 @@ func main() {
 
 	// Services
 	authService := _authService.NewService(userRepository)
-	_userService.NewService(userRepository)
+	userService := _userService.NewService(userRepository)
 
 	// Handler
 	authHandler := _handlers.NewAuthHandler(authService)
+	userHandler := _handlers.NewUserHandler(userService)
 
 	// Route
-	routes.RegisterUserRoute(r, *authHandler)
+	routes.RegisterUserRoute(r, authHandler, userHandler)
 	
 	r.Run(":" + config.App.Port)
 }
