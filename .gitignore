@@ -1,5 +1,4 @@
 .env
 .vscode
 test.db
-cover.out
 cover.out.tmp
