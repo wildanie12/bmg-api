@@ -78,3 +78,45 @@ func TestRegister(t *testing.T) {
 		assert.Equal(t, _web.UserResponse{}, response.User)
 	})
 }
+
+
+func TestMe(t *testing.T) {
+	t.Run("case success", func(t *testing.T) {
+		userSample := _userRepository.SampleData[0]
+		userResponseSample := _web.UserResponse{
+			Username: userSample.Username,
+			Name: userSample.Name,
+			Email: userSample.Email,
+			ReferralCode: userSample.ReferralCode,
+		}
+
+		userRepo := _userRepository.NewRepositoryMock(&mock.Mock{})
+		userRepo.Mock.On("Find").Return(userSample, nil)
+
+		userService := _authService.NewService(userRepo)
+		response, err := userService.Me("ahmad", "token")
+
+		assert.Nil(t, err)
+		assert.NotEmpty(t, response.Token)
+		assert.Equal(t, userResponseSample, response.User)
+	})
+	t.Run("case success", func(t *testing.T) {
+		userSample := _userRepository.SampleData[0]
+		userResponseSample := _web.UserResponse{
+			Username: userSample.Username,
+			Name: userSample.Name,
+			Email: userSample.Email,
+			ReferralCode: userSample.ReferralCode,
+		}
+
+		userRepo := _userRepository.NewRepositoryMock(&mock.Mock{})
+		userRepo.Mock.On("Find").Return(userSample, nil)
+
+		userService := _authService.NewService(userRepo)
+		response, err := userService.Me("ahmad", "token")
+
+		assert.Nil(t, err)
+		assert.NotEmpty(t, response.Token)
+		assert.Equal(t, userResponseSample, response.User)
+	})
+}
