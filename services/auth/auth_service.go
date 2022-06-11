@@ -8,6 +8,7 @@ import (
 	"gin-bmg-restful/utils"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -78,11 +79,16 @@ func (service Service) Register(request _web.UserRequest) (_web.AuthResponse, er
 	password, _ := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 	user.Password = string(password)
 
+	// Generating referral code
+	user.ReferralCode = uuid.New().String()
+
 	// repository action
 	user, err = service.userRepo.Create(user)
 	if err != nil {
 		return _web.AuthResponse{}, err
 	}
+
+
 
 	// generate token
 	token, _ := utils.CreateToken(user)

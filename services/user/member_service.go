@@ -63,13 +63,14 @@ func (service Service) UpdateProfile(request _web.UserRequest, username string) 
 		user.Password = string(password)
 	}
 
-	user, err := service.userRepo.Update(_domain.User{}, request.Username)
+	user, err := service.userRepo.Update(user, username)
 	if err != nil {
 		return _web.UserResponse{}, err
 	}
 
 	userResponse := _web.UserResponse{}
 	copier.Copy(&userResponse, &user)
+	userResponse.Username = username
 	return userResponse, nil
 }
 
@@ -81,7 +82,7 @@ func (service Service) CheckReferral(request _web.ReferralRequest, username stri
 		return _web.UserResponse{}, err
 	}
 
-	owner, err := service.userRepo.FindBy("referral", request.Referral)
+	owner, err := service.userRepo.FindBy("referral_code", request.Referral)
 	if err != nil {
 		return _web.UserResponse{}, _web.Error{
 			Message: "Referral code is invalid",
