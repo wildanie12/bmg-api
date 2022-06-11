@@ -23,8 +23,12 @@ type RepositoryInterface interface {
 
 	// Update user with newly provided user
 	// entity domain and persistence it to data source
+	Create(user domain.User) (domain.User, error)
+
+	// Update user with newly provided user
+	// entity domain and persistence it to data source
 	Update(user domain.User) (domain.User, error)
 
 	// Delete user by id provided in parameter
-	Delete(id int) (error)
+	Delete(id int) error
 }
