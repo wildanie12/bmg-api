@@ -94,3 +94,25 @@ func (service Service) Register(request _web.UserRequest) (_web.AuthResponse, er
 		User: userResponse,
 	}, nil
 }
+
+// Me returns currently authenticated user
+func (service Service) Me(username string, token string) (_web.AuthResponse, error) {
+
+	// get user data
+	user, err := service.userRepo.Find(username)
+	if err != nil {
+		return _web.AuthResponse{}, _web.Error{
+			Code: 400,
+			Message: "your credentials is invalid",
+		}
+	}
+
+	// convert user to response
+	userResponse := _web.UserResponse{}
+	copier.Copy(&userResponse, &user)
+
+	return _web.AuthResponse{
+		Token: token,
+		User: userResponse,
+	}, nil
+}
