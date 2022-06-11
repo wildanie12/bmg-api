@@ -32,7 +32,11 @@ func (handler AuthHandler) Login(c *gin.Context) {
 		_helpers.WebErrorResponse(c, err)
 		return
 	}
-	c.JSON(http.StatusOK, authResponse)
+	c.JSON(http.StatusOK, _web.SuccessResponse{
+		Status: "OK",
+		Code: 200,
+		Data: authResponse,
+	})
 }
 
 // Register a new user
@@ -46,7 +50,11 @@ func (handler AuthHandler) Register(c *gin.Context) {
 		_helpers.WebErrorResponse(c, err)
 		return
 	}
-	c.JSON(http.StatusOK, authResponse)
+	c.JSON(http.StatusOK, _web.SuccessResponse{
+		Status: "OK",
+		Code: 200,
+		Data: authResponse,
+	})
 }
 
 // Me method can Get currently authenticated

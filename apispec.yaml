@@ -8,6 +8,8 @@ info:
         name: Badar Wildani
         url: https://github.com/wildanie12
     description: Simple API for user registration based on BMG api description
+servers:
+    - url: http://localhost:8000
 components:
     securitySchemes:
         JWTUser:
@@ -224,7 +226,7 @@ components:
                             example: 2.18
 
 paths:
-    /auth:
+    /auth/login:
         post:
             tags:
                 - 'User & Authentication'
@@ -336,108 +338,6 @@ paths:
                                 $ref: '#/components/schemas/web_server_error'
 
     /users:
-        get:
-            tags:
-                - 'User & Authentication'
-            description: 'get list of users based on provided data filter'
-            summary: 'get list of users'
-            parameters:
-                - name: 'name'
-                  in: query
-                  description: 'filter data parameter'
-                  schema:
-                      type: string
-                      example: 'john'
-            responses:
-                '200':
-                    description: success getting authenticated user
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    status:
-                                        type: string
-                                        example: 'OK'
-                                    code:
-                                        type: number
-                                        example: 200
-                                    data:
-                                        type: array
-                                        items:
-                                            $ref: '#/components/schemas/user_response'
-                '500':
-                    description: 'server error'
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/web_server_error'
-
-        post:
-            tags:
-                - 'User & Authentication'
-            description: 'Register a user'
-            summary: 'Register a user'
-            requestBody:
-                required: true
-                description: User credentials that need to be provided
-                content:
-                    application/x-www-form-urlencoded:
-                        schema:
-                            $ref: '#/components/schemas/user_request'
-            responses:
-                '201':
-                    description: 'success registering a user'
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    status:
-                                        type: string
-                                        example: 'OK'
-                                    code:
-                                        type: number
-                                        example: 201
-                                    data:
-                                        type: object
-                                        properties:
-                                            id:
-                                                type: number
-                                                example: 1
-                '422':
-                    description: 'Unprocessable Entities (Validation failed)'
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    status:
-                                        type: string
-                                        example: 'ERROR'
-                                    code:
-                                        type: number
-                                        example: 422
-                                    error:
-                                        type: string
-                                        example: 'form validation error'
-                                    errors:
-                                        type: array
-                                        items:
-                                            type: object
-                                            properties:
-                                                error:
-                                                    type: string
-                                                    example: 'username is required'
-                                                field:
-                                                    type: string
-                                                    example: 'username'
-                '500':
-                    description: 'server error'
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/web_server_error'
         put:
             security:
                 - JWTUser: []
@@ -478,6 +378,109 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/web_unauthorized'
+                '422':
+                    description: 'Unprocessable Entities (Validation failed)'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: 'ERROR'
+                                    code:
+                                        type: number
+                                        example: 422
+                                    error:
+                                        type: string
+                                        example: 'form validation error'
+                                    errors:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                error:
+                                                    type: string
+                                                    example: 'username is required'
+                                                field:
+                                                    type: string
+                                                    example: 'username'
+                '500':
+                    description: 'server error'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/web_server_error'
+
+        get:
+            tags:
+                - 'User & Authentication'
+            description: 'get list of users based on provided data filter'
+            summary: 'get list of users'
+            parameters:
+                - name: 'name'
+                  in: query
+                  description: 'filter data parameter'
+                  schema:
+                      type: string
+                      example: 'john'
+            responses:
+                '200':
+                    description: success getting authenticated user
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: 'OK'
+                                    code:
+                                        type: number
+                                        example: 200
+                                    data:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/user_response'
+                '500':
+                    description: 'server error'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/web_server_error'
+    /auth/register:
+        post:
+            tags:
+                - 'User & Authentication'
+            description: 'Register a user'
+            summary: 'Register a user'
+            requestBody:
+                required: true
+                description: User credentials that need to be provided
+                content:
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/user_request'
+            responses:
+                '201':
+                    description: 'success registering a user'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: 'OK'
+                                    code:
+                                        type: number
+                                        example: 201
+                                    data:
+                                        type: object
+                                        properties:
+                                            id:
+                                                type: number
+                                                example: 1
                 '422':
                     description: 'Unprocessable Entities (Validation failed)'
                     content:
