@@ -75,7 +75,7 @@ func (repo RepositoryMock) Create(user _domain.User) (_domain.User, error) {
 
 // Update user with newly provided user
 // entity _domain and persistence it to data source
-func (repo RepositoryMock) Update(user _domain.User) (_domain.User, error) {
+func (repo RepositoryMock) Update(user _domain.User, username string) (_domain.User, error) {
 	args := repo.Mock.Called()
 	return args.Get(0).(domain.User), args.Error(1)
 }

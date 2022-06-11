@@ -30,5 +30,5 @@ type RepositoryInterface interface {
 	Update(user domain.User, username string) (domain.User, error)
 
 	// Delete user by id provided in parameter
-	Delete(id int) error
+	Delete(username string) error
 }
