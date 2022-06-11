@@ -2,6 +2,7 @@ package auth
 
 import (
 	_validations "gin-bmg-restful/deliveries/validations"
+	_domain "gin-bmg-restful/entities/domain"
 	_web "gin-bmg-restful/entities/web"
 	_userRepository "gin-bmg-restful/repositories/user"
 	"gin-bmg-restful/utils"
@@ -50,6 +51,37 @@ func (service Service) Login(authRequest _web.AuthRequest) (_web.AuthResponse, e
 			Code: 400,
 			Message: "your credentials is invalid pass",
 		}
+	}
+
+	// generate token
+	token, _ := utils.CreateToken(user)
+	userResponse := _web.UserResponse{}
+	copier.Copy(&userResponse, &user)
+
+	return _web.AuthResponse{
+		Token: token,
+		User: userResponse,
+	}, nil
+}
+
+// Register a user
+func (service Service) Register(request _web.UserRequest) (_web.AuthResponse, error) {
+	// validate
+	err := _validations.ValidateUserRequest(service.validate, request)
+	if err != nil {
+		return _web.AuthResponse{}, err
+	}
+
+	// convert to domain entity
+	user := _domain.User{}
+	copier.Copy(&user, &request)
+	password, _ := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
+	user.Password = string(password)
+
+	// repository action
+	user, err = service.userRepo.Create(user)
+	if err != nil {
+		return _web.AuthResponse{}, err
 	}
 
 	// generate token
