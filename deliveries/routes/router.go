@@ -17,3 +17,9 @@ func RegisterUserRoute(r *gin.Engine, authHandler *_handlers.AuthHandler, userHa
 	r.PUT("/users", _middleware.VerifyJWT(), userHandler.UpdateProfile)
 	r.POST("/users/referral", _middleware.VerifyJWT() ,userHandler.CheckReferral)
 }
+
+
+// RegisterHeroRoute registers all hero endpoint
+func RegisterHeroRoute(r *gin.Engine, heroHandler *_handlers.HeroHandler) {
+	r.GET("/hero", heroHandler.FindAll)
+}
